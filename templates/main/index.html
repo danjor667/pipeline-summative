@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Diabetes Risk Predictor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 123, 255, 0.7), rgba(0, 123, 255, 0.9)), url('{% static "images/health-bg.jpg" %}');
+        background-size: cover;
+        color: white;
+        padding: 5rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0.5rem;
+    }
+
+    .feature-card {
+        transition: transform 0.3s ease;
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #0d6efd;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">Assess Your Diabetes Risk</h1>
+        <p class="lead mb-5">Our AI-powered tool analyzes your health metrics to provide personalized diabetes risk assessments. Take control of your health today.</p>
+        <a href="{% url 'predict' %}" class="btn btn-light btn-lg px-4 me-md-2">Get Your Prediction</a>
+        <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-4">Learn More</a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Use Our Predictor?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <h5 class="card-title">Accurate Predictions</h5>
+                        <p class="card-text">Our model is trained on extensive medical datasets to provide reliable risk assessments based on your health metrics.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5 class="card-title">Privacy Focused</h5>
+                        <p class="card-text">Your health data remains private and secure. We use industry-standard encryption and never share your information.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon">
+                            <i class="bi bi-lightbulb"></i>
+                        </div>
+                        <h5 class="card-title">Personalized Insights</h5>
+                        <p class="card-text">Get tailored recommendations based on your results to help reduce your risk factors and improve your health.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row align-items-center">
+            <div class="col-md-6 order-md-2">
+                <img src="{% static 'images/how-it-works.svg' %}" alt="How It Works" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-md-6 order-md-1">
+                <div class="p-4">
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-primary text-white rounded-circle p-3 me-3">1</div>
+                        <div>
+                            <h5>Input Your Health Metrics</h5>
+                            <p>Provide basic information like age, BMI, blood pressure, glucose levels, and family history.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-primary text-white rounded-circle p-3 me-3">2</div>
+                        <div>
+                            <h5>Get Your Risk Analysis</h5>
+                            <p>Our AI algorithm analyzes your data and calculates your personalized diabetes risk score.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <div class="bg-primary text-white rounded-circle p-3 me-3">3</div>
+                        <div>
+                            <h5>Review Recommendations</h5>
+                            <p>Based on your results, we provide actionable advice to help manage and reduce your risk factors.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">What Our Users Say</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="small mb-3 text-warning">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="card-text">"This tool helped me identify my risk factors early. After following the recommendations, my next checkup showed significant improvements in my health markers."</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">JD</div>
+                            <div>
+                                <h6 class="mb-0">John D.</h6>
+                                <small class="text-muted">User since 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="small mb-3 text-warning">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                        </div>
+                        <p class="card-text">"The personalized insights were eye-opening. My doctor was impressed with how the recommendations aligned with medical best practices."</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">RL</div>
+                            <div>
+                                <h6 class="mb-0">Robert L.</h6>
+                                <small class="text-muted">User since 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="small mb-3 text-warning">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                        </div>
+                        <p class="card-text">"The personalized insights were eye-opening. My doctor was impressed with how the recommendations aligned with medical best practices."</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">RL</div>
+                            <div>
+                                <h6 class="mb-0">Jordan N.</h6>
+                                <small class="text-muted">User since 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 text-center bg-primary text-white rounded">
+    <div class="container">
+        <h2 class="mb-4">Ready to Know Your Risk?</h2>
+        <p class="lead mb-4">It only takes a few minutes to get your personalized diabetes risk assessment.</p>
+        <a href="{% url 'predict' %}" class="btn btn-light btn-lg px-4 me-2">Sign Up Now</a>
+        <a href="{% url 'predict' %}" class="btn btn-outline-light btn-lg px-4">Try Without Account</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap Icons
+    document.addEventListener('DOMContentLoaded', function() {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css';
+        document.head.appendChild(link);
+    });
+</script>
+{% endblock %}

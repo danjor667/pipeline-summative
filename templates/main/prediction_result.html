@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header {% if probabilities > 50 %}bg-danger text-white{% else %}bg-success text-white{% endif %}">
+                    <h2 class="text-center">
+                        {% if probabilities > 50 %}Diabetes Risk Detected{% else %}No Diabetes Risk{% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert {% if probabilities > 50 %}alert-danger{% else %}alert-success{% endif %} text-center" role="alert">
+                        <h4>Prediction Probability: {{ probabilities |floatformat:2 }}%</h4>
+                    </div>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <th colspan="2" class="text-center">Patient Details</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Age</td>
+                                <td>{{ patient.age }} years</td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td>{{ patient.gender }}</td>
+                            </tr>
+                            <tr>
+                                <td>Body Mass Index (BMI)</td>
+                                <td>{{ patient.bmi|floatformat:1 }}</td>
+                            </tr>
+                            <tr>
+                                <td>Blood Pressure</td>
+                                <td>{{ patient.blood_pressure }} mmHg</td>
+                            </tr>
+                            <tr>
+                                <td>Glucose Level</td>
+                                <td>{{ patient.glucose_level }} mg/dL</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center mt-4">
+                        {% if probabilities > 50 %}
+                        <div class="alert alert-warning" role="alert">
+                            <strong>Recommendation:</strong> Please consult with a healthcare professional for further evaluation and personalized advice.
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info" role="alert">
+                            <strong>Recommendation:</strong> Continue maintaining a healthy lifestyle and regular medical check-ups.
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'predict' %}" class="btn btn-primary">
+                            Make Another Prediction
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

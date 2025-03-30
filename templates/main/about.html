@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About - Diabetes Risk Predictor{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="text-center mb-5">About Diabetes Risk Predictor</h1>
+
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <h2 class="section-title">Our Mission</h2>
+                    <p class="lead">To empower individuals with knowledge about their diabetes risk and provide actionable steps to improve their health outcomes.</p>
+
+                    <p>At Diabetes Risk Predictor, we believe that prevention is better than cure. By providing accessible tools for risk assessment, we aim to help people identify potential health concerns early and take proactive steps towards a healthier lifestyle.</p>
+
+                    <p>Our web application combines medical knowledge with advanced machine learning techniques to deliver personalized risk assessments and recommendations.</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">How Our Prediction Model Works</h2>
+            <p>Our diabetes risk assessment tool uses a sophisticated machine learning model that has been trained on extensive health datasets. The model analyzes various health metrics and personal factors to calculate your risk of developing type 2 diabetes within the next 5-10 years.</p>
+
+            <div class="row mb-5">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-database me-2 text-primary"></i>Data Collection</h5>
+                            <p class="card-text">We collect key health metrics such as BMI, blood pressure, glucose levels, and lifestyle factors that have been scientifically proven to correlate with diabetes risk.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-cpu me-2 text-primary"></i>Algorithm Processing</h5>
+                            <p class="card-text">Our machine learning algorithm processes your data, comparing it against patterns identified in large medical datasets to calculate your personal risk score.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-graph-up me-2 text-primary"></i>Risk Assessment</h5>
+                            <p class="card-text">The model generates a risk percentage that indicates your likelihood of developing type 2 diabetes, categorized as low, moderate, or high risk.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-list-check me-2 text-primary"></i>Personalized Recommendations</h5>
+                            <p class="card-text">Based on your specific risk factors, we provide tailored recommendations to help you reduce your risk and improve your overall health.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Model Accuracy and Limitations</h2>
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <p>Our prediction model has been validated against clinical standards and has shown a high degree of accuracy in identifying individuals at risk for type 2 diabetes. However, it's important to understand the following limitations:</p>
+
+                    <ul class="mb-4">
+                        <li>The risk assessment is based solely on the information you provide</li>
+                        <li>The tool does not diagnose diabetes or replace medical advice</li>
+                        <li>Risk factors may vary across different populations and demographics</li>
+                        <li>The assessment represents a statistical probability, not a certainty</li>
+                    </ul>
+
+                    <div class="alert alert-info">
+                        <p class="mb-0"><strong>Important:</strong> This tool is designed for educational and informational purposes only. Always consult with healthcare professionals for medical advice, diagnosis, or treatment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Our Team</h2>
+            <div class="row mb-5">
+                <div class="col-md-4 mb-4 text-center">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-laptop" style="font-size: 40px;"></i>
+                            </div>
+                            <h5 class="card-title">Jordan Nguepi</h5>
+                            <p class="text-muted">Lead Developer</p>
+                            <p class="card-text">Chemist and software engineer specializing in healthcare applications and Machine Learning.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 text-center">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-person" style="font-size: 40px;"></i>
+                            </div>
+                            <h5 class="card-title">ChatGPT 4o</h5>
+                            <p class="text-muted">Medical Advisor</p>
+                            <p class="card-text">A.I model with 15+ years of clinical experience in diabetes care and prevention.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 text-center">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-bar-chart" style="font-size: 40px;"></i>
+                            </div>
+                            <h5 class="card-title">Claude AI</h5>
+                            <p class="text-muted">Research Lead and Coding assistant</p>
+                            <p class="card-text">LLM model with top notch coding skills and reasoning.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">References and Research</h2>
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <p>Our diabetes risk prediction model is based on established medical research and clinical guidelines, including:</p>
+
+                    <ul>
+                        <li>American Diabetes Association (ADA) risk assessment criteria</li>
+                        <li>National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK) research findings</li>
+                        <li>World Health Organization (WHO) guidelines for diabetes prevention</li>
+                        <li>The Finnish Diabetes Risk Score (FINDRISC) methodology</li>
+                        <li>The Framingham Offspring Study on diabetes risk factors</li>
+                    </ul>
+
+                    <p>For a more comprehensive list of our references and research methodology, please <a href="{% url 'about' %}">click here</a>.</p>
+                </div>
+            </div>
+
+            <div class="text-center mb-5">
+                <a href="{% url 'predict' %}" class="btn btn-primary btn-lg px-5">Try Our Risk Predictor</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center">Create Your Account</h2>
+                </div>
+                <div class="card-body">
+                    {% if error_message %}
+                        <div class="alert alert-danger">
+                            {{ error_message }}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'signup' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="username"
+                                name="username"
+                                required
+                                minlength="4"
+                                maxlength="150"
+                            >
+                            <div class="form-text text-muted">
+                                4-150 characters. Letters, numbers, and @/./+/-/_ only.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="email"
+                                name="email"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name (Optional)</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="first_name"
+                                name="first_name"
+                                maxlength="30"
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name (Optional)</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="last_name"
+                                name="last_name"
+                                maxlength="30"
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                name="password"
+                                required
+                                minlength="8"
+                            >
+                            <div class="form-text text-muted">
+                                <ul>
+                                    <li>At least 8 characters long</li>
+                                    <li>Must include letters and numbers</li>
+                                    <li>Special characters recommended</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="confirm_password"
+                                name="confirm_password"
+                                required
+                                minlength="8"
+                            >
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                id="terms"
+                                required
+                            >
+                            <label class="form-check-label" for="terms">
+                                I agree to the Terms of Service and Privacy Policy
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+
+    form.addEventListener('submit', function(event) {
+        // Password validation
+        if (password.value.length < 8) {
+            alert('Password must be at least 8 characters long');
+            event.preventDefault();
+            return;
+        }
+
+        // Check if passwords match
+        if (password.value !== confirmPassword.value) {
+            alert('Passwords do not match');
+            event.preventDefault();
+            return;
+        }
+
+        // Basic password strength check
+        const hasLetters = /[a-zA-Z]/.test(password.value);
+        const hasNumbers = /[0-9]/.test(password.value);
+
+        if (!hasLetters || !hasNumbers) {
+            alert('Password must contain both letters and numbers');
+            event.preventDefault();
+            return;
+        }
+    });
+});
+</script>
+{% endblock %}

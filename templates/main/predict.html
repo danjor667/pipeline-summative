@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Predict Diabetes Risk - Diabetes Risk Predictor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background-color: #f8f9fa;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .risk-explanation {
+        background-color: rgba(13, 110, 253, 0.1);
+        border-left: 4px solid #0d6efd;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+
+    .form-range {
+        width: 100%;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+
+    .measurement-unit {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="mb-4 text-center">Diabetes Risk Assessment</h1>
+
+        <div class="alert alert-info" role="alert">
+            <h5><i class="bi bi-info-circle"></i> About This Prediction Tool</h5>
+            <p class="mb-0">This tool uses a machine learning model trained on medical data to estimate your risk of developing type 2 diabetes. The assessment is based on key health metrics and risk factors identified by medical research.</p>
+        </div>
+
+        <form id="prediction-form" class="needs-validation" method="post" action="{% url 'predict' %}" data-submit-type="ajax" novalidate>
+            {% csrf_token %}
+
+            <!-- Personal Information -->
+            <div class="form-section">
+                <h3>Personal Information</h3>
+                <p class="text-muted mb-4">Basic information that helps establish baseline risk factors.</p>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="id_age" class="form-label">Age</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="id_age" name="age" min="18" max="120" required>
+                            <span class="input-group-text">years</span>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid age between 18 and 120.</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="id_gender" class="form-label">Gender</label>
+                        <select class="form-select" id="id_gender" name="gender" required>
+                            <option value="" selected disabled>Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your gender.</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="id_height" class="form-label">Height</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="id_height" name="height" min="100" max="250" required>
+                            <span class="input-group-text">cm</span>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid height (100-250 cm).</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="id_weight" class="form-label">Weight</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="id_weight" name="weight" min="30" max="300" required>
+                            <span class="input-group-text">kg</span>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid weight (30-300 kg).</div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="id_height" class="form-label">dpf</label>
+                        <div class="input-group">
+                            <label for="id_dpf"></label><input type="number" class="form-control" id="id_dpf" name="dpf" min="100" max="250" required>
+                            <span class="input-group-text">cm</span>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid height (100-250 cm).</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="id_weight" class="form-label">Pregnancies</label>
+                        <div class="input-group">
+                            <label for="id_pregnancies"></label><input type="number" class="form-control" id="id_pregnancies" name="pregnancies" min="0" max="100" required>
+                            <span class="input-group-text">pregnancies</span>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid pregnancy number (0-100 kg).</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="id_height" class="form-label">Skin Thickness</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="id_skinThickness" name="skinThickness" min="100" max="250" required>
+                            <span class="input-group-text">cm</span>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid skin Thickness (100-250 cm).</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="id_weight" class="form-label">Insulin</label>
+                        <div class="input-group">
+                            <label for="id_insulin"></label><input type="number" class="form-control" id="id_insulin" name="insulin" min="0" max="300" required>
+                            <span class="input-group-text">ml</span>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid insulin level (30-300).</div>
+                    </div>
+                </div>
+
+
+                <div class="mt-3 p-3 bg-light rounded">
+                    <label class="form-label mb-0">BMI (Body Mass Index):</label>
+                    <div class="d-flex align-items-center">
+                        <h3 id="bmi-value" class="me-2">--</h3>
+                        <span id="bmi-classification">--</span>
+                    </div>
+                    <p class="help-text mb-0">BMI is automatically calculated from your height and weight</p>
+                </div>
+
+                <div>
+                    <input type="hidden" id="bmi-input" name="bmi">
+                </div>
+            </div>
+
+            <!-- Health Metrics -->
+            <div class="form-section">
+                <h3>Health Metrics</h3>
+                <p class="text-muted mb-4">Key indicators that help assess diabetes risk.</p>
+
+                <div class="mb-3">
+                    <label for="id_glucose" class="form-label">Fasting Blood Glucose Level</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="id_glucose" name="glucose" min="70" max="300" required>
+                        <span class="input-group-text">mg/dL</span>
+                    </div>
+                    <div class="help-text">Normal fasting glucose range: 70-99 mg/dL</div>
+                    <div class="invalid-feedback">Please enter a valid glucose level.</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="id_systolic" class="form-label">Systolic Blood Pressure</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="id_systolic" name="systolic" min="90" max="200" required>
+                            <span class="input-group-text">mmHg</span>
+                        </div>
+                        <div class="help-text">The top number in a blood pressure reading</div>
+                        <div class="invalid-feedback">Please enter a valid systolic pressure.</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="id_diastolic" class="form-label">Diastolic Blood Pressure</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="id_diastolic" name="diastolic" min="50" max="120" required>
+                            <span class="input-group-text">mmHg</span>
+                        </div>
+                        <div class="help-text">The bottom number in a blood pressure reading</div>
+                        <div class="invalid-feedback">Please enter a valid diastolic pressure.</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_cholesterol" class="form-label">Total Cholesterol</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="id_cholesterol" name="cholesterol" min="100" max="400" required>
+                        <span class="input-group-text">mg/dL</span>
+                    </div>
+                    <div class="help-text">Desirable level: Less than 200 mg/dL</div>
+                    <div class="invalid-feedback">Please enter a valid cholesterol level.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_hdl" class="form-label">HDL Cholesterol (Good Cholesterol)</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="id_hdl" name="hdl" min="20" max="100" required>
+                        <span class="input-group-text">mg/dL</span>
+                    </div>
+                    <div class="help-text">Healthy level: 60 mg/dL or higher</div>
+                    <div class="invalid-feedback">Please enter a valid HDL level.</div>
+                </div>
+            </div>
+
+            <!-- Risk Factors -->
+            <div class="form-section">
+                <h3>Risk Factors</h3>
+                <p class="text-muted mb-4">Additional factors that influence diabetes risk.</p>
+
+                <div class="mb-3">
+                    <label class="form-label">Family History of Diabetes</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="family_history" id="family_history_yes" value="yes" required>
+                        <label class="form-check-label" for="family_history_yes">
+                            Yes (parent, sibling, or child with diabetes)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="family_history" id="family_history_no" value="no">
+                        <label class="form-check-label" for="family_history_no">
+                            No
+                        </label>
+                    </div>
+                    <div class="invalid-feedback">Please select an option.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Physical Activity Level</label>
+                    <label for="id_activity"></label><select class="form-select" id="id_activity" name="activity" required>
+                        <option value="" selected disabled>Select activity level</option>
+                        <option value="sedentary">Sedentary (little or no exercise)</option>
+                        <option value="light">Light (light exercise/sports 1-3 days/week)</option>
+                        <option value="moderate">Moderate (moderate exercise/sports 3-5 days/week)</option>
+                        <option value="very_active">Very Active (hard exercise/sports 6-7 days/week)</option>
+                        <option value="extremely_active">Extremely Active (very hard daily exercise/sports & physical job)</option>
+                    </select>
+                    <div class="invalid-feedback">Please select your activity level.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_smoking" class="form-label">Smoking Status</label>
+                    <select class="form-select" id="id_smoking" name="smoking" required>
+                        <option value="" selected disabled>Select smoking status</option>
+                        <option value="never">Never smoked</option>
+                        <option value="former">Former smoker</option>
+                        <option value="current">Current smoker</option>
+                    </select>
+                    <div class="invalid-feedback">Please select your smoking status.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Previous Gestational Diabetes</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gestational_diabetes" id="gestational_yes" value="yes">
+                        <label class="form-check-label" for="gestational_yes">
+                            Yes (only applicable for women who have been pregnant)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gestational_diabetes" id="gestational_no" value="no">
+                        <label class="form-check-label" for="gestational_no">
+                            No
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gestational_diabetes" id="gestational_na" value="not_applicable" checked>
+                        <label class="form-check-label" for="gestational_na">
+                            Not applicable
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-5">
+                <button type="submit" class="btn btn-primary btn-lg px-5 py-2">
+                    <i class="bi bi-calculator me-2"></i>Calculate My Risk
+                </button>
+                <p class="mt-2 text-muted small">Your data is processed securely and is not stored unless you create an account.</p>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

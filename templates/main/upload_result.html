@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h2 class="text-center">Model Retraining Results</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success mb-4">
+                        <i class="fas fa-check-circle me-2"></i> Model successfully retrained with new data!
+                    </div>
+
+                    <!-- Model Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Model Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Model ID:</th>
+                                                <td>{{ model.id }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Training Started:</th>
+                                                <td>{{ model.training_started|date:"F j, Y, g:i a" }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Training Completed:</th>
+                                                <td>{{ model.training_completed|date:"F j, Y, g:i a" }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Training Duration:</th>
+                                                <td>{{ model.training_duration }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Dataset Size:</th>
+                                                <td>{{ model.dataset_size }} records</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Description:</th>
+                                                <td>{{ model.description|default:"No description provided" }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Performance Metrics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6 mb-4">
+                                            <div class="text-center">
+                                                <h6>Accuracy</h6>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <div class="progress" style="height: 12px; width: 80%;">
+                                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ model.accuracy|floatformat:0 }}%;" aria-valuenow="{{ model.accuracy|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <span class="ms-2 fw-bold">{{ model.accuracy|floatformat:2 }}%</span>
+                                                </div>
+                                                {% if model.prev_accuracy %}
+                                                <small class="text-muted">Previous: {{ model.prev_accuracy|floatformat:2 }}%</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-4">
+                                            <div class="text-center">
+                                                <h6>Precision</h6>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <div class="progress" style="height: 12px; width: 80%;">
+                                                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ model.precision|floatformat:0 }}%;" aria-valuenow="{{ model.precision|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <span class="ms-2 fw-bold">{{ model.precision|floatformat:2 }}%</span>
+                                                </div>
+                                                {% if model.prev_precision %}
+                                                <small class="text-muted">Previous: {{ model.prev_precision|floatformat:2 }}%</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-4">
+                                            <div class="text-center">
+                                                <h6>Recall</h6>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <div class="progress" style="height: 12px; width: 80%;">
+                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ model.recall|floatformat:0 }}%;" aria-valuenow="{{ model.recall|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <span class="ms-2 fw-bold">{{ model.recall|floatformat:2 }}%</span>
+                                                </div>
+                                                {% if model.prev_recall %}
+                                                <small class="text-muted">Previous: {{ model.prev_recall|floatformat:2 }}%</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-4">
+                                            <div class="text-center">
+                                                <h6>F1 Score</h6>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <div class="progress" style="height: 12px; width: 80%;">
+                                                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ model.f1_score|floatformat:0 }}%;" aria-valuenow="{{ model.f1_score|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <span class="ms-2 fw-bold">{{ model.f1_score|floatformat:2 }}%</span>
+                                                </div>
+                                                {% if model.prev_f1_score %}
+                                                <small class="text-muted">Previous: {{ model.prev_f1_score|floatformat:2 }}%</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualization -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Confusion Matrix</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <img src="{{ model.confusion_matrix_img }}" class="img-fluid" alt="Confusion Matrix">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">ROC Curve</h5>
+                                </div>
+                                <div class="card-body text-center">
+                                    <img src="{{ model.roc_curve_img }}" class="img-fluid" alt="ROC Curve">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Importance -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Feature Importance</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="featureImportanceChart" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Over Time -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Performance Metrics Over Time</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="metricsOverTimeChart" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <a href="{% url 'model_detail_export' model.id %}" class="btn btn-outline-primary">
+                            <i class="fas fa-file-download me-2"></i> Export Report
+                        </a>
+                        <a href="{% url 'model_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i> View All Models
+                        </a>
+                        <a href="{% url 'prediction_form' %}" class="btn btn-success">
+                            <i class="fas fa-stethoscope me-2"></i> Make Predictions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Feature Importance Chart
+        const featureImportanceCtx = document.getElementById('featureImportanceChart').getContext('2d');
+        new Chart(featureImportanceCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ feature_names|safe }},
+                datasets: [{
+                    label: 'Feature Importance',
+                    data: {{ feature_importance|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw.toFixed(3);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Metrics Over Time Chart
+        const metricsOverTimeCtx = document.getElementById('metricsOverTimeChart').getContext('2d');
+        new Chart(metricsOverTimeCtx, {
+            type: 'line',
+            data: {
+                labels: {{ training_dates|safe }},
+                datasets: [
+                    {
+                        label: 'Accuracy',
+                        data: {{ accuracy_history|safe }},
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    },
+                    {
+                        label: 'Precision',
+                        data: {{ precision_history|safe }},
+                        borderColor: 'rgba(23, 162, 184, 1)',
+                        backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    },
+                    {
+                        label: 'Recall',
+                        data: {{ recall_history|safe }},
+                        borderColor: 'rgba(255, 193, 7, 1)',
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw.toFixed(2) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

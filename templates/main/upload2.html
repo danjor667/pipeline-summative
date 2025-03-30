@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center">Model Fine-Tuning: CSV Upload</h2>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div id="validation-alert" class="alert alert-danger d-none" role="alert">
+                        <h5>CSV Validation Error:</h5>
+                        <div id="validation-message"></div>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" id="csv-upload-form">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="csv_file" class="form-label">Upload CSV File</label>
+                            <input
+                                class="form-control"
+                                type="file"
+                                id="csv_file"
+                                name="csv_file"
+                                accept=".csv"
+                                required
+                            >
+                            <div class="form-text text-muted">
+                                Upload a CSV file containing patient data for model fine-tuning.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea
+                                class="form-control"
+                                id="description"
+                                name="description"
+                                rows="3"
+                                placeholder="Optional: Provide a brief description of the dataset"
+                            ></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="confirm_data_quality"
+                                    name="confirm_data_quality"
+                                    required
+                                >
+                                <label class="form-check-label" for="confirm_data_quality">
+                                    I confirm that the data is accurate, anonymized, and complies with privacy regulations
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" id="upload-button">
+                                Upload and Fine-Tune Model
+                            </button>
+                            <div class="spinner-border text-primary d-none mx-auto mt-3" id="loading-spinner" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer text-muted">
+                    <h5>CSV File Requirements:</h5>
+                    <ul>
+                        <li>Must be a valid CSV file</li>
+                        <li>Include all necessary columns for diabetes prediction</li>
+                        <li>No personally identifiable information</li>
+                        <li>Recommended file size: Less than 50MB</li>
+                    </ul>
+
+                    <div class="mt-4">
+                        <h5>Sample CSV Format:</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Pregnancies</th>
+                                        <th>Glucose</th>
+                                        <th>BloodPressure</th>
+                                        <th>SkinThickness</th>
+                                        <th>Insulin</th>
+                                        <th>BMI</th>
+                                        <th>DiabetesPedigreeFunction</th>
+                                        <th>Age</th>
+                                        <th>Outcome</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>148</td>
+                                        <td>72</td>
+                                        <td>35</td>
+                                        <td>0</td>
+                                        <td>33.6</td>
+                                        <td>0.627</td>
+                                        <td>50</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>85</td>
+                                        <td>66</td>
+                                        <td>29</td>
+                                        <td>0</td>
+                                        <td>26.6</td>
+                                        <td>0.351</td>
+                                        <td>31</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="small mt-2">
+                            <strong>Column descriptions:</strong>
+                            <ul class="mb-0">
+                                <li><strong>Pregnancies:</strong> Number of pregnancies (integer)</li>
+                                <li><strong>Glucose:</strong> Plasma glucose concentration (mg/dL)</li>
+                                <li><strong>BloodPressure:</strong> Diastolic blood pressure (mm Hg)</li>
+                                <li><strong>SkinThickness:</strong> Triceps skin fold thickness (mm)</li>
+                                <li><strong>Insulin:</strong> 2-Hour serum insulin (mu U/ml)</li>
+                                <li><strong>BMI:</strong> Body mass index (weight in kg/(height in m)²)</li>
+                                <li><strong>DiabetesPedigreeFunction:</strong> Diabetes pedigree function (float)</li>
+                                <li><strong>Age:</strong> Age in years (integer)</li>
+                                <li><strong>Outcome:</strong> Class variable (0: no diabetes, 1: diabetes)</li>
+                            </ul>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="#" class="btn btn-sm btn-outline-secondary">Download Sample CSV</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('csv-upload-form');
+    const fileInput = document.getElementById('csv_file');
+    const validationAlert = document.getElementById('validation-alert');
+    const validationMessage = document.getElementById('validation-message');
+    const uploadButton = document.getElementById('upload-button');
+    const loadingSpinner = document.getElementById('loading-spinner');
+
+    // Required columns for diabetes prediction
+    const requiredColumns = [
+        'Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness',
+        'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome'
+    ];
+
+    form.addEventListener('submit', function(event) {
+        // Prevent form submission until validation is complete
+        event.preventDefault();
+
+        // Clear previous validation errors
+        hideValidationError();
+
+        // Show loading spinner
+        loadingSpinner.classList.remove('d-none');
+        uploadButton.disabled = true;
+
+        // Get the file
+        const file = fileInput.files[0];
+
+        if (!file) {
+            showValidationError('Please select a CSV file.');
+            return;
+        }
+
+        // Validate file extension
+        if (!file.name.toLowerCase().endsWith('.csv')) {
+            showValidationError('Please upload a valid CSV file.');
+            return;
+        }
+
+        // Validate file size (less than 50MB)
+        if (file.size > 50 * 1024 * 1024) {
+            showValidationError('File size exceeds the 50MB limit.');
+            return;
+        }
+
+        // Read and validate the CSV file
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            try {
+                const contents = e.target.result;
+                const lines = contents.split('\n');
+
+                if (lines.length < 2) {
+                    showValidationError('The CSV file does not contain enough data. Please include a header row and at least one data row.');
+                    return;
+                }
+
+                // Check the header row (first line)
+                const headerLine = lines[0].trim();
+                const headers = headerLine.split(',').map(header => header.trim());
+
+                // Validate all required columns are present
+                const missingColumns = requiredColumns.filter(col => !headers.includes(col));
+
+                if (missingColumns.length > 0) {
+                    showValidationError(`Missing required columns: ${missingColumns.join(', ')}`);
+                    return;
+                }
+
+                // Validate data types in the first row
+                if (lines.length > 1) {
+                    const dataLine = lines[1].trim();
+                    const values = dataLine.split(',').map(value => value.trim());
+
+                    // Check if we have enough columns in the data row
+                    if (values.length !== headers.length) {
+                        showValidationError('Data row has a different number of columns than the header row.');
+                        return;
+                    }
+
+                    // Get column indexes for type validation
+                    const numericColumns = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness',
+                                           'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'];
+                    const numericIndices = numericColumns.map(col => headers.indexOf(col)).filter(idx => idx !== -1);
+
+                    // Check if outcome column has valid values (0 or 1)
+                    const outcomeIndex = headers.indexOf('Outcome');
+                    if (outcomeIndex !== -1) {
+                        const outcomeValue = values[outcomeIndex];
+                        if (outcomeValue !== '0' && outcomeValue !== '1') {
+                            showValidationError('Outcome column must contain only 0 or 1 values.');
+                            return;
+                        }
+                    }
+
+                    // Check numeric columns for non-numeric values
+                    for (const idx of numericIndices) {
+                        if (isNaN(parseFloat(values[idx]))) {
+                            showValidationError(`Non-numeric value found in ${headers[idx]} column.`);
+                            return;
+                        }
+                    }
+                }
+
+                // If all validations pass, submit the form
+                form.submit();
+
+            } catch (error) {
+                console.error(error);
+                showValidationError('Error reading CSV file. Please ensure it is properly formatted.');
+            }
+        };
+
+        reader.onerror = function() {
+            showValidationError('Error reading the file. Please try again.');
+        };
+
+        // Read the file as text
+        reader.readAsText(file);
+    });
+
+    function showValidationError(message) {
+        validationMessage.innerHTML = message;
+        validationAlert.classList.remove('d-none');
+        loadingSpinner.classList.add('d-none');
+        uploadButton.disabled = false;
+
+        // Scroll to error message
+        validationAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideValidationError() {
+        validationAlert.classList.add('d-none');
+        validationMessage.innerHTML = '';
+    }
+
+    // Reset validation when file changes
+    fileInput.addEventListener('change', function() {
+        hideValidationError();
+    });
+});
+</script>
+{% endblock %}
