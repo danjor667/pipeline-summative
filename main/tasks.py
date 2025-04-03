@@ -33,8 +33,6 @@ def preprocess(file_data, file_name):
                       "Outcome"
                       ]
 
-    # assert(len(data.columns) == 9)
-    # assert(all([name in data.columns for name in features_names]))
 
     if len(data.columns) != len(features_names):
         return(

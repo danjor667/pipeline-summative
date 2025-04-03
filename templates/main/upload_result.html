@@ -129,7 +129,7 @@
                                     <h5 class="mb-0">Confusion Matrix</h5>
                                 </div>
                                 <div class="card-body text-center">
-                                    <img src="{{ model.confusion_matrix_img }}" class="img-fluid" alt="Confusion Matrix">
+                                    <img src="{{ confusion_matrix_img }}" class="img-fluid" alt="Confusion Matrix">
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                                     <h5 class="mb-0">ROC Curve</h5>
                                 </div>
                                 <div class="card-body text-center">
-                                    <img src="{{ model.roc_curve_img }}" class="img-fluid" alt="ROC Curve">
+                                    <img src="{{ roc_curve_img }}" class="img-fluid" alt="ROC Curve">
                                 </div>
                             </div>
                         </div>
@@ -167,13 +167,13 @@
 
                     <!-- Action Buttons -->
                     <div class="d-flex justify-content-center gap-3 mt-4">
-                        <a href="{% url 'model_detail_export' model.id %}" class="btn btn-outline-primary">
+                        <a href="{% url 'predict'  %}" class="btn btn-outline-primary">
                             <i class="fas fa-file-download me-2"></i> Export Report
                         </a>
-                        <a href="{% url 'model_list' %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'predict' %}" class="btn btn-outline-secondary">
                             <i class="fas fa-list me-2"></i> View All Models
                         </a>
-                        <a href="{% url 'prediction_form' %}" class="btn btn-success">
+                        <a href="{% url 'predict' %}" class="btn btn-success">
                             <i class="fas fa-stethoscope me-2"></i> Make Predictions
                         </a>
                     </div>

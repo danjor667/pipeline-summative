@@ -132,7 +132,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
-MODEL_PATH = os.path.join(BASE_DIR, 'model_training/new_model.pkl')
+MODEL_PATH = os.path.join(BASE_DIR, 'model_training/model.pkl')
+CALIBER_PATH = os.path.join(BASE_DIR, 'model_training/calibrated_svm.pkl')
 SCALER_PATH = os.path.join(BASE_DIR, 'model_training/scaler.pkl')
+MODEL_INFO_PATH = os.path.join(BASE_DIR, "model_training/model_info.json")
+TRAINING_HISTORY_PATH = os.path.join(BASE_DIR, "model_training/training_history.json")
 
 # todo dont forget to add whitenoise to handle statics files
