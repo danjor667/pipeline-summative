@@ -5,6 +5,7 @@ A web application built with Django that predicts the likelihood of a patient ha
 ---
 
 [video Link](https://drive.google.com/file/d/13ek1eVZHw82VP5AY05fypyN8-6Cpajhi/view?usp=sharing)
+[Lin to app](https://pipeline-summative-fkuc.onrender.com)
 
 ## 🔍 Overview
 
