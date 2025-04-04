@@ -76,7 +76,7 @@ docs/_build/
 target/
 
 
-### Django ###
+### Django ###3
 *.log
 *.pot
 *.pyc
